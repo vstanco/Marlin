@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -59,7 +59,10 @@ GcodeSuite gcode;
 
 #include "../MarlinCore.h" // for idle()
 
-millis_t GcodeSuite::previous_move_ms;
+// Inactivity shutdown
+millis_t GcodeSuite::previous_move_ms = 0,
+         GcodeSuite::max_inactive_time = 0,
+         GcodeSuite::stepper_inactive_time = SEC_TO_MS(DEFAULT_STEPPER_DEACTIVE_TIME);
 
 // Relative motion mode for each logical axis
 static constexpr xyze_bool_t ar_init = AXIS_RELATIVE_MODES;
@@ -839,7 +842,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
         case 351: M351(); break;                                  // M351: Toggle MS1 MS2 pins directly, S# determines MS1 or MS2, X# sets the pin high/low.
       #endif
 
-      #if HAS_CASE_LIGHT
+      #if ENABLED(CASE_LIGHT_ENABLE)
         case 355: M355(); break;                                  // M355: Set case light brightness
       #endif
 
@@ -866,6 +869,10 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
 
       #if ENABLED(Z_STEPPER_AUTO_ALIGN)
         case 422: M422(); break;                                  // M422: Set Z Stepper automatic alignment position using probe
+      #endif
+
+      #if ENABLED(TOUCH_SCREEN_CALIBRATION)
+        case 995: M995(); break;                                  // M995: Touch screen calibration for TFT display
       #endif
 
       #if ENABLED(PLATFORM_M997_SUPPORT)
