@@ -546,10 +546,10 @@
   //#define MIN_BED_POWER 0
   //#define PID_BED_DEBUG // Sends debug data to the serial port.
 
-  //Stock CR-10 Bed Tuned for 70C
-  #define DEFAULT_bedKp 43.31
-  #define DEFAULT_bedKi 7.72
-  #define DEFAULT_bedKd 162.01
+  //230V Bed Tuned for 60C
+  #define DEFAULT_bedKp 26.67
+  #define DEFAULT_bedKi 2.78
+  #define DEFAULT_bedKd 170.67
 
   // 120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   // from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
