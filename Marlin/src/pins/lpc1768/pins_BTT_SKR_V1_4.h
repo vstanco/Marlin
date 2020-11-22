@@ -25,6 +25,12 @@
   #define BOARD_INFO_NAME "BTT SKR V1.4"
 #endif
 
+#define I2C_EEPROM
+#ifdef E2END
+   #undef E2END
+#endif
+#define E2END 0x7FFF // EEPROM end address AT24C256 (32kB)
+
 #ifndef BOARD_CUSTOM_BUILD_FLAGS
   #define BOARD_CUSTOM_BUILD_FLAGS -DLPC_PINCFG_UART3_P4_28
 #endif
