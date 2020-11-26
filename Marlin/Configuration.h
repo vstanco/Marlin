@@ -504,9 +504,9 @@
     #define DEFAULT_Ki_LIST {   1.08,   1.08 }
     #define DEFAULT_Kd_LIST { 114.00, 114.00 }
   #else
-    #define DEFAULT_Kp  33.59
-    #define DEFAULT_Ki   1.72
-    #define DEFAULT_Kd  77.54
+   #define DEFAULT_Kp 32.32
+   #define DEFAULT_Ki 2.86
+   #define DEFAULT_Kd 91.18
   #endif
 #endif // PIDTEMP
 
@@ -527,7 +527,7 @@
  * heater. If your configuration is significantly different than this and you don't understand
  * the issues involved, don't use bed PID until someone else verifies that your hardware works.
  */
-//#define PIDTEMPBED
+#define PIDTEMPBED
 
 //#define BED_LIMIT_SWITCHING
 
@@ -747,7 +747,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 807, 1620, 555 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 807, 1620, 880 }
 
 /**
  * Default Max Feed Rate (mm/s)
