@@ -49,7 +49,9 @@
   #error "Seriously? High resolution TFT screen without menu?"
 #endif
 
-static bool draw_menu_navigation = false;
+#if ENABLED(TOUCH_SCREEN)
+  static bool draw_menu_navigation = false;
+#endif
 
 void MarlinUI::tft_idle() {
   #if ENABLED(TOUCH_SCREEN)
@@ -260,43 +262,38 @@ void MarlinUI::draw_status_screen() {
   tft.set_background(COLOR_BACKGROUND);
   tft.add_rectangle(0, 0, TFT_WIDTH - 8, 34, COLOR_AXIS_HOMED);
 
-  uint16_t color;
-  uint16_t offset;
-  bool is_homed;
-
   tft.add_text( 16, 3, COLOR_AXIS_HOMED , "X");
   tft.add_text(192, 3, COLOR_AXIS_HOMED , "Y");
   tft.add_text(330, 3, COLOR_AXIS_HOMED , "Z");
 
-  is_homed = TEST(axis_homed, X_AXIS);
-  tft_string.set(blink & !is_homed ? "?" : ftostr4sign(LOGICAL_X_POSITION(current_position.x)));
-  tft.add_text(102 - tft_string.width(), 3, is_homed ? COLOR_AXIS_HOMED : COLOR_AXIS_NOT_HOMED, tft_string);
+  bool not_homed = axis_should_home(X_AXIS);
+  tft_string.set(blink && not_homed ? "?" : ftostr4sign(LOGICAL_X_POSITION(current_position.x)));
+  tft.add_text(102 - tft_string.width(), 3, not_homed ? COLOR_AXIS_NOT_HOMED : COLOR_AXIS_HOMED, tft_string);
 
-  is_homed = TEST(axis_homed, Y_AXIS);
-  tft_string.set(blink & !is_homed ? "?" : ftostr4sign(LOGICAL_Y_POSITION(current_position.y)));
-  tft.add_text(280 - tft_string.width(), 3, is_homed ? COLOR_AXIS_HOMED : COLOR_AXIS_NOT_HOMED, tft_string);
+  not_homed = axis_should_home(Y_AXIS);
+  tft_string.set(blink && not_homed ? "?" : ftostr4sign(LOGICAL_Y_POSITION(current_position.y)));
+  tft.add_text(280 - tft_string.width(), 3, not_homed ? COLOR_AXIS_NOT_HOMED : COLOR_AXIS_HOMED, tft_string);
 
-  is_homed = TEST(axis_homed, Z_AXIS);
-  if (blink & !is_homed) {
+  uint16_t offset = 32;
+  not_homed = axis_should_home(Z_AXIS);
+  if (blink && not_homed)
     tft_string.set("?");
-    offset = 32; // ".00"
-  }
   else {
     const float z = LOGICAL_Z_POSITION(current_position.z);
     tft_string.set(ftostr52sp((int16_t)z));
     tft_string.rtrim();
-    offset = tft_string.width();
+    offset += tft_string.width();
 
     tft_string.set(ftostr52sp(z));
-    offset += 32 - tft_string.width();
+    offset -= tft_string.width();
   }
-  tft.add_text(455 - tft_string.width() - offset, 3, is_homed ? COLOR_AXIS_HOMED : COLOR_AXIS_NOT_HOMED, tft_string);
+  tft.add_text(455 - tft_string.width() - offset, 3, not_homed ? COLOR_AXIS_NOT_HOMED : COLOR_AXIS_HOMED, tft_string);
   TERN_(TOUCH_SCREEN, touch.add_control(MOVE_AXIS, 4, 132, TFT_WIDTH - 8, 34));
 
   // feed rate
   tft.canvas(96, 180, 100, 32);
   tft.set_background(COLOR_BACKGROUND);
-  color = feedrate_percentage == 100 ? COLOR_RATE_100 : COLOR_RATE_ALTERED;
+  uint16_t color = feedrate_percentage == 100 ? COLOR_RATE_100 : COLOR_RATE_ALTERED;
   tft.add_image(0, 0, imgFeedRate, color);
   tft_string.set(i16tostr3rj(feedrate_percentage));
   tft_string.add('%');
@@ -657,7 +654,7 @@ void menu_item(const uint8_t row, bool sel ) {
 
   menu_line(row, sel ? COLOR_SELECTION_BG : COLOR_BACKGROUND);
   #if ENABLED(TOUCH_SCREEN)
-    const TouchControlType tct = TERN(SINGLE_TOUCH_NAVIGATION, true, sel) ? CLICK : MENU_ITEM;
+    const TouchControlType tct = TERN(SINGLE_TOUCH_NAVIGATION, true, sel) ? MENU_CLICK : MENU_ITEM;
     touch.add_control(tct, 0, 4 + 45 * row, TFT_WIDTH, 43, encoderTopLine + row);
   #endif
 }
@@ -897,35 +894,37 @@ static void z_minus() {
   moveAxis(Z_AXIS, -1);
 }
 
-static void e_select() {
-  motionAxisState.e_selection++;
-  if (motionAxisState.e_selection >= EXTRUDERS) {
-    motionAxisState.e_selection = 0;
+#if ENABLED(TOUCH_SCREEN)
+  static void e_select() {
+    motionAxisState.e_selection++;
+    if (motionAxisState.e_selection >= EXTRUDERS) {
+      motionAxisState.e_selection = 0;
+    }
+
+    quick_feedback();
+    drawCurESelection();
+    drawAxisValue(E_AXIS);
   }
 
-  quick_feedback();
-  drawCurESelection();
-  drawAxisValue(E_AXIS);
-}
+  static void do_home() {
+    quick_feedback();
+    drawMessage(GET_TEXT(MSG_LEVEL_BED_HOMING));
+    queue.inject_P(G28_STR);
+    // Disable touch until home is done
+    TERN_(HAS_TFT_XPT2046, touch.disable());
+    drawAxisValue(E_AXIS);
+    drawAxisValue(X_AXIS);
+    drawAxisValue(Y_AXIS);
+    drawAxisValue(Z_AXIS);
+  }
 
-static void do_home() {
-  quick_feedback();
-  drawMessage(GET_TEXT(MSG_LEVEL_BED_HOMING));
-  queue.inject_P(G28_STR);
-  // Disable touch until home is done
-  TERN_(HAS_TFT_XPT2046, touch.disable());
-  drawAxisValue(E_AXIS);
-  drawAxisValue(X_AXIS);
-  drawAxisValue(Y_AXIS);
-  drawAxisValue(Z_AXIS);
-}
-
-static void step_size() {
-  motionAxisState.currentStepSize = motionAxisState.currentStepSize / 10.0;
-  if (motionAxisState.currentStepSize < 0.0015) motionAxisState.currentStepSize = 10.0;
-  quick_feedback();
-  drawCurStepValue();
-}
+  static void step_size() {
+    motionAxisState.currentStepSize = motionAxisState.currentStepSize / 10.0;
+    if (motionAxisState.currentStepSize < 0.0015) motionAxisState.currentStepSize = 10.0;
+    quick_feedback();
+    drawCurStepValue();
+  }
+#endif
 
 #if HAS_BED_PROBE
   static void z_select() {
@@ -1021,7 +1020,7 @@ void MarlinUI::move_axis_screen() {
   motionAxisState.zTypePos.x = x;
   motionAxisState.zTypePos.y = y;
   drawCurZSelection();
-  #if HAS_BED_PROBE
+  #if BOTH(HAS_BED_PROBE, TOUCH_SCREEN)
     if (!busy) touch.add_control(BUTTON, x, y, BTN_WIDTH, 34 * 2, (intptr_t)z_select);
   #endif
 
