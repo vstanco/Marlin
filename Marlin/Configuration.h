@@ -736,10 +736,10 @@
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
 
-//* EZR 
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 807, 1620, 400 }
+//* EZR 1.8 stepper
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 807, 1620, 93.14 }
 
-//* Bontech clone
+//* Bontech clone 0.9 stepper
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 807, 1620, 926.32 }
 
 /**
