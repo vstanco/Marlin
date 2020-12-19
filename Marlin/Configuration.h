@@ -493,9 +493,9 @@
     #define DEFAULT_Kd_LIST { 114.00, 114.00 }
   #else
   //* V6 30W
-   #define DEFAULT_Kp 32.32
-   #define DEFAULT_Ki 2.86
-   #define DEFAULT_Kd 91.18
+   #define DEFAULT_Kp 49.91
+   #define DEFAULT_Ki 5.87
+   #define DEFAULT_Kd 106.17
 
    //* Vulcano 40W
    //#define DEFAULT_Kp 32.32
