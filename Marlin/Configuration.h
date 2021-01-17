@@ -744,7 +744,7 @@
  */
 
 //* EZR 1.8 stepper
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 807, 1620, 93.14 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 807, 1620, 95 }
 
 //* Bontech clone 0.9 stepper
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 807, 1620, 926.32 }
@@ -754,7 +754,7 @@
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 300, 300, 10, 55 }
+#define DEFAULT_MAX_FEEDRATE          { 500, 300, 20, 100 }
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -997,7 +997,7 @@
  *     |    [-]    |
  *     O-- FRONT --+
  */
-#define NOZZLE_TO_PROBE_OFFSET { -32, -4, 0 }
+#define NOZZLE_TO_PROBE_OFFSET { -54, -4, -1 }
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
