@@ -492,10 +492,15 @@
     #define DEFAULT_Ki_LIST {   1.08,   1.08 }
     #define DEFAULT_Kd_LIST { 114.00, 114.00 }
   #else
+  //Hemera 40W
+   #define DEFAULT_Kp 18.33
+   #define DEFAULT_Ki 1.51
+   #define DEFAULT_Kd 55.79
+  
   //* V6 30W
-   #define DEFAULT_Kp 49.91
-   #define DEFAULT_Ki 5.87
-   #define DEFAULT_Kd 106.17
+   //#define DEFAULT_Kp 49.91
+   //#define DEFAULT_Ki 5.87
+   //#define DEFAULT_Kd 106.17
 
    //* Vulcano 40W
    //#define DEFAULT_Kp 32.32
@@ -743,8 +748,11 @@
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
 
+//* Hemera
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 807, 1620, 409 }
+
 //* EZR 1.8 stepper
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 807, 1620, 95 }
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 807, 1620, 95 }
 
 //* Bontech clone 0.9 stepper
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 807, 1620, 926.32 }
@@ -997,7 +1005,7 @@
  *     |    [-]    |
  *     O-- FRONT --+
  */
-#define NOZZLE_TO_PROBE_OFFSET { -54, -4, -1 }
+#define NOZZLE_TO_PROBE_OFFSET { -44, -8, 0 }
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
@@ -1049,7 +1057,7 @@
  * A total of 3 or more adds more slow probes, taking the average.
  */
 #define MULTIPLE_PROBING 2
-//#define EXTRA_PROBING    1
+#define EXTRA_PROBING    1
 
 /**
  * Z probes require clearance when deploying, stowing, and moving between
@@ -1167,12 +1175,12 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 290
+#define X_BED_SIZE 300
 #define Y_BED_SIZE 310
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
-#define Y_MIN_POS 0
+#define Y_MIN_POS -5
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
