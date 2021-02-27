@@ -753,7 +753,7 @@
  */
 
 //* Hemera(0,9/1,8/0,9)
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 403, 1620, 409 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 327, 1620, 409 }
 
 //* EZR 1.8 stepper
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 635, 807, 1620, 95 }
@@ -1180,11 +1180,11 @@
 
 // The size of the print bed
 #define X_BED_SIZE 300
-#define Y_BED_SIZE 160
+#define Y_BED_SIZE 190
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
-#define Y_MIN_POS -40
+#define Y_MIN_POS -53
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
