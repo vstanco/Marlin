@@ -510,10 +510,15 @@
     #define DEFAULT_Ki_LIST {   1.08,   1.08 }
     #define DEFAULT_Kd_LIST { 114.00, 114.00 }
   #else
+  //BTT Mixing 30W
+    #define DEFAULT_Kp 29.64
+    #define DEFAULT_Ki 1.75
+    #define DEFAULT_Kd 125.58
+    
   //Hemera 40W
-   #define DEFAULT_Kp 18.33
-   #define DEFAULT_Ki 1.51
-   #define DEFAULT_Kd 55.79
+   //#define DEFAULT_Kp 18.33
+   //#define DEFAULT_Ki 1.51
+   //#define DEFAULT_Kd 55.79
   
   //* V6 30W
    //#define DEFAULT_Kp 49.91
@@ -643,7 +648,7 @@
  * Note: For Bowden Extruders make this large enough to allow load/unload.
  */
 #define PREVENT_LENGTHY_EXTRUDE
-#define EXTRUDE_MAXLENGTH 500
+#define EXTRUDE_MAXLENGTH 800
 
 //===========================================================================
 //======================== Thermal Runaway Protection =======================
@@ -1073,7 +1078,7 @@
  *     |    [-]    |
  *     O-- FRONT --+
  */
-#define NOZZLE_TO_PROBE_OFFSET { -44, -8, 0 }
+#define NOZZLE_TO_PROBE_OFFSET { -38, 0, 0 }
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
